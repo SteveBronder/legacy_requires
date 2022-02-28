@@ -1,0 +1,35 @@
+#ifndef LEGACY_REQUIRES_HEADER_HPP
+#define LEGACY_REQUIRES_HEADER_HPP
+
+#include<include/bool_constant.hpp>
+#include<include/is_base_pointer_convertible.hpp>
+#include<include/is_double_or_int.hpp>
+#include<include/is_eigen_matrix.hpp>
+#include<include/is_vector_like.hpp>
+#include<include/return_type.hpp>
+#include<include/void_t.hpp>
+#include<include/conjunction.hpp>
+#include<include/is_complex.hpp>
+#include<include/is_eigen_dense_base.hpp>
+#include<include/is_eigen_sparse_base.hpp>
+#include<include/plain_type.hpp>
+#include<include/scalar_type.hpp>
+#include<include/contains_std_vector.hpp>
+#include<include/is_container.hpp>
+#include<include/is_eigen_dense_dynamic.hpp>
+#include<include/is_plain_type.hpp>
+#include<include/ref_type.hpp>
+#include<include/scalar_type_pre.hpp>
+#include<include/disjunction.hpp>
+#include<include/is_dense_dynamic.hpp>
+#include<include/is_eigen.hpp>
+#include<include/is_string_convertible.hpp>
+#include<include/require_generics.hpp>
+#include<include/static_select.hpp>
+#include<include/index_type.hpp>
+#include<include/is_detected.hpp>
+#include<include/is_eigen_matrix_base.hpp>
+#include<include/is_vector.hpp>
+#include<include/require_helpers.hpp>
+#include<include/value_type.hpp>
+#endif

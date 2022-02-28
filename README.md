@@ -1,72 +1,48 @@
-# cpp_boilerplate_project
+# legacy_requires
+A C++14 header only library for a pseudo version of requires syntax
 
-[![ci](https://github.com/cpp-best-practices/cpp_starter_project/actions/workflows/ci.yml/badge.svg)](https://github.com/cpp-best-practices/cpp_starter_project/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/cpp-best-practices/cpp_boilerplate_project/branch/main/graph/badge.svg)](https://codecov.io/gh/cpp-best-practices/cpp_starter_project)
-[![Language grade: C++](https://img.shields.io/lgtm/grade/cpp/github/cpp-best-practices/cpp_boilerplate_project)](https://lgtm.com/projects/g/cpp-best-practices/cpp_starter_project/context:cpp)
-
-
-## About cpp_boilerplate_project
-
-This is a C++ Best Practices GitHub template for getting up and running with C++ quickly.
-
-By default (collectively known as `ENABLE_DEVELOPER_MODE`)
-
- * Address Sanitizer and Undefined Behavior Sanitizer enabled where possible
- * Warnings as errors
- * clang-tidy and cppcheck static analysis
- * conan for dependencies
-
-It includes
-
- * a basic CLI example
- * examples for fuzz, unit, and constexpr testing
- * large github action testing matrix
-
-It requires
-
- * cmake
- * conan
- * a compiler
-
-If you want a more complex example project, check out the [cpp_starter_project](https://github.com/cpp-best-practices/cpp_starter_project).
-
-Ths Boilerplate project will merge new features first, then they will be merged (as appropriate) into cpp_starter_project.
-
-## Getting Started
-
-### Use the Github template
-
-First, click the green `Use this template` button near the top of this page.
-This will take you to Github's ['Generate Repository'](https://github.com/cpp-best-practices/cpp_boilerplate_project/generate) page.
-Fill in a repository name and short description, and click 'Create repository from template'.
-This will allow you to create a new repository in your Github account,
-prepopulated with the contents of this project.
-Now you can clone the project locally and get to work!
-
-    git clone https://github.com/<user>/<your_new_repo>.git
-
-### Remove frameworks you're not going to use
-
-If you know you're not going to use one or more of the optional gui/graphics
-frameworks (fltk, gtkmm, imgui, etc.), you can remove them with `git rm`:
-
-    git rm -r src/<unnecessary_framework>
+Still a work in progress porting, but the concept is that you would like to use
+perfect forwarding or generatic templates, but you don't have access to C++20.
 
 
+So for example her we have a basic multiply function.
 
-## More Details
+```cpp
+template <typename T1, typename T2>
+auto multiply(T1&& x, T2&& y) {
+  return std::forward<T1>(x) * std::forward<T2>(y);
+}
+```
 
- * [Dependency Setup](README_dependencies.md)
- * [Building Details](README_building.md)
- * [Troubleshooting](README_troubleshooting.md)
- * [Docker](README_docker.md)
+But for some reason when the program calls `multiply` with matrices from the
+ `Eigen` library it would be better if the definition used lazy products such as.
 
-## Testing
+```cpp
+template <typename T1, typename T2>
+auto multiply(T1&& x, T2&& y) {
+  return std::forward<T1>(x).lazyProduct(std::forward<T2>(y));
+}
+```
 
-See [Catch2 tutorial](https://github.com/catchorg/Catch2/blob/master/docs/tutorial.md)
+The `legacy::requires` namespace comes with structs that are just specialized
+ `enable_if_t<>`s. We can use these like in the below to have multiple
+ definitions of multiply that still have generic templates and can use
+ perfect forwarding.
 
-## Fuzz testing
+```cpp
+template <typename Mat1, typename Mat2, legacy::require::all_not_eigen_t<Mat1, Mat2>* = nullptr>
+auto multiply(T1&& x, T2&& y) {
+  return std::forward<T1>(x) * std::forward<T2>(y);
+}
 
-See [libFuzzer Tutorial](https://github.com/google/fuzzing/blob/master/tutorial/libFuzzerTutorial.md)
+template <typename Mat1, typename Mat2, legacy::require::all_eigen_t<Mat1, Mat2>* = nullptr>
+auto multiply(T1&& x, T2&& y) {
+  return std::forward<T1>(x).lazyProduct(std::forward<T2>(y));
+}
+```
 
 
+## TODOs
+
+- [ ] Port tests and docs
+ 
