@@ -1,4 +1,4 @@
-find_package(Catch2 REQUIRED)
+find_package(Gtest REQUIRED)
 
 include(CTest)
 include(Catch)
